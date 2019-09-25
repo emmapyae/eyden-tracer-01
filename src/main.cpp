@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
 {
 	const Size resolution(800, 600);
 	// render three images with different camera settings
-	
+	printf("main\n");
 	CCameraPerspective c1(Vec3f(0, 0, 10), Vec3f(0, 0, -1), Vec3f(0, 1, 0), 60, resolution);
 	Mat img1 = RenderFrame(c1);
 	imwrite("perspective1.jpg", img1);
