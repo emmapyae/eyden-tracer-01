@@ -28,11 +28,13 @@ public:
 	{
 		// --- PUT YOUR CODE HERE ---
 		/*
-		In Problem 1.2, we got 
+		In Problem 1.2, we got t = (m_origin - ray.org).dot(m_normal) 
+		/(ray.dir).dot(m_normal).
 		*/
 		float num = (m_origin - ray.org).dot(m_normal);
 		float den = (ray.dir).dot(m_normal);
 		float t;
+		//if den == 0, then we will not get a real number.
 		if (den == 0){
 			return false;
 		}

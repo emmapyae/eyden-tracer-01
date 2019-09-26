@@ -26,7 +26,7 @@ public:
 		, m_dir(dir)
 		, m_up(up)
 	{
-		printf("Resolution is %d\n", getResolution().width);
+		
 		//using the angle to find focus
 		m_focus = 1 / tan(angle / 2 * Pif / 180);
 		m_yAxis = -1 * m_up; // to prevent upside down from human's perspective
