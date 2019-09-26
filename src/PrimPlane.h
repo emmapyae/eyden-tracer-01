@@ -27,11 +27,22 @@ public:
 	virtual bool Intersect(Ray& ray) override
 	{
 		// --- PUT YOUR CODE HERE ---
-		return true;
+		float denom = ray.dir.dot(m_normal);
+		if (denom > Epsilon)
+		{
+			Vec3f po = m_origin - ray.org;
+			float num = po.dot(m_normal);
+			ray.t = num / denom;
+
+			//check if it is in range;
+			return (ray.t >= 0);
+		}
+
+		return false;
 	}
 	
 	
 private:
-	Vec3f m_normal;	///< Point on the plane
-	Vec3f m_origin;	///< Normal to the plane
+	Vec3f m_normal;	///< Point on the plane -- a
+	Vec3f m_origin;	///< Normal to the plane -- n
 };

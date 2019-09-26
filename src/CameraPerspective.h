@@ -9,7 +9,9 @@
  */
 class CCameraPerspective : public ICamera
 {
+	
 public:
+	float angle_in_rad;
 	/**
 	 * @brief Constructor
 	 * @param pos Camera origin (center of projection)
@@ -24,13 +26,40 @@ public:
 		, m_dir(dir)
 		, m_up(up)
 	{
-		// --- PUT YOUR CODE HERE ---
+		printf("Resolution is %d\n", getResolution().width);
+		m_zAxis = normalize(dir);
+		m_xAxis = normalize(m_zAxis *  up);
+		m_yAxis = normalize(m_xAxis * m_zAxis);
+		m_aspect = resolution.width / float(resolution.height);
+		angle_in_rad = angle * (float)M_PI / 180.f;
+		m_focus = 1.f / tan(angle_in_rad / 2.f);
 	}
 	virtual ~CCameraPerspective(void) = default;
 
 	virtual bool InitRay(float x, float y, Ray& ray) override
 	{
-		// --- PUT YOUR CODE HERE ---
+		// ray.org = m_pos;
+		// float ndcx, ndcy, sscx, sscy; 
+		// for(int y=0; y<getResolution().height; y++)
+		// {
+		// 	for(int x=0; x<getResolution().width; x++)
+		// 	{
+		// 		ndcx= (x + 0.5) / getResolution().width;
+		// 		ndcy= (y + 0.5) /getResolution().height;
+
+		// 		sscx= 2 * ndcx-1;  
+		// 		sscy= 2 * ndcy-1;
+				
+		// 		ray.dir = (sscx * m_xAxis) + (sscy * m_yAxis) + (m_focus * m_zAxis);
+		// 		ray.dir = normalize(ray.dir);
+				
+		// 	}
+		// }
+		ray.org = m_pos;
+		ray.dir = ( m_xAxis * (2.0f * ((x/(float)getResolution().width - .5f) * m_aspect)))
+		+ ( m_yAxis * (2.0f * (y/(float)getResolution().height- .5f)))
+    	+ ( m_zAxis * m_focus);
+		ray.dir = normalize(ray.dir);
 		return true;
 	}
 
