@@ -29,9 +29,14 @@ Mat RenderFrame(ICamera &camera)
 			
 			// Your code
 			Vec3f col = RGB(0, 0, 0); // background color
+
+			/*
+			 * Find closest intersection with scene
+			 * objetcs and calculate color
+			 */
 			if (p1.Intersect(ray))
 				col = RGB(1, 1, 0); 
-				
+
 			if (s1.Intersect(ray))
 				col = RGB(1, 0, 0);
 
@@ -46,12 +51,6 @@ Mat RenderFrame(ICamera &camera)
 
 			if (t2.Intersect(ray))
 				col = RGB(1, 1, 1);
-
-			/*
-			 * Find closest intersection with scene
-			 * objetcs and calculate color
-			 */
-			
 
 			img.at<Vec3f>(y, x) = col; // store pixel color
 		}

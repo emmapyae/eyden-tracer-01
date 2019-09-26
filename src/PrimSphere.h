@@ -23,25 +23,46 @@ public:
 
 	virtual bool Intersect(Ray &ray) override
 	{
-		float a, b, c;
-		float t1, t2;
-		a = ray.dir.dot(ray.dir);
-		b = 2 * ray.dir.dot(ray.org - m_center);
-		c = ((ray.org - m_center).dot(ray.org - m_center)) - (m_radius * m_radius);
-		if ((b*b) - (4 * a *c) < 0){
-			return false;
-		}
-
-		else if((b*b) - (4 * a *c) == 0){
-		 	ray.t = (-1*b)/(2*a);
-		}
-		else{
-			t1 = ((-1*b) + sqrt((b*b) - (4*a*c)) / (2 * a));
-			t2 = ((-1*b) - sqrt((b*b) - (4*a*c)) / (2 * a));
-		}
-		
 		// --- PUT YOUR CODE HERE ---
 
+		/*In problem 1.2, we got a quadratic equation for t. 
+		(t*t)*ray.dir.dot(ray.dir) + 2*t*ray.dir.dot(ray.org-m_center) + 
+		(ray.org - m_center).dot(ray.org - m_center) - (m_radius * m_radius) = 0
+		So, the quadratic formula is used to find t. 
+		*/
+		float a = ray.dir.dot(ray.dir);
+		float b = 2 * ray.dir.dot(ray.org - m_center);
+		float c = (ray.org - m_center).dot(ray.org - m_center) - (m_radius * m_radius);
+		//value inside the square root
+		float value = (b*b) - (4*a*c);
+		float t1, t2 = 0;
+		//negative value inside a square root will not produce a real number
+		if (value < 0)
+		{
+			return false;
+		}
+		else if (value == 0)
+		{
+			t1 = (-1 * b) / (2 * a);
+		}
+		else
+		{
+			t1 = ((-b) - sqrt(value)) / (2 * a);
+			t2 = ((-b) + sqrt(value)) / (2 * a);
+			if (t1 > t2)
+			std::swap(t1, t2);
+			else if (t1 < 0)
+			{
+				t1 = t2;
+				if (t1 < 0)
+					return false;
+			}
+		}
+		if (t1 < Epsilon || t1 > ray.t)
+		{
+			return false;
+		}
+		ray.t = t1;
 		return true;
 	}
 

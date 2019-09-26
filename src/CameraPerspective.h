@@ -27,39 +27,27 @@ public:
 		, m_up(up)
 	{
 		printf("Resolution is %d\n", getResolution().width);
+		//using the angle to find focus
+		m_focus = 1 / tan(angle / 2 * Pif / 180);
+		m_yAxis = -1 * m_up; // to prevent upside down from human's perspective
+		m_xAxis = m_dir.cross(m_up);
+		m_aspect = (float)resolution.width / resolution.height;
 		m_zAxis = normalize(dir);
-		m_xAxis = normalize(m_zAxis *  up);
-		m_yAxis = normalize(m_xAxis * m_zAxis);
-		m_aspect = resolution.width / float(resolution.height);
-		angle_in_rad = angle * (float)M_PI / 180.f;
-		m_focus = 1.f / tan(angle_in_rad / 2.f);
 	}
 	virtual ~CCameraPerspective(void) = default;
 
 	virtual bool InitRay(float x, float y, Ray& ray) override
 	{
-		// ray.org = m_pos;
-		// float ndcx, ndcy, sscx, sscy; 
-		// for(int y=0; y<getResolution().height; y++)
-		// {
-		// 	for(int x=0; x<getResolution().width; x++)
-		// 	{
-		// 		ndcx= (x + 0.5) / getResolution().width;
-		// 		ndcy= (y + 0.5) /getResolution().height;
+		float ndcx = (x + 0.5) / getResolution().width;
+		float ndcy = (y + 0.5) / getResolution().height;
 
-		// 		sscx= 2 * ndcx-1;  
-		// 		sscy= 2 * ndcy-1;
-				
-		// 		ray.dir = (sscx * m_xAxis) + (sscy * m_yAxis) + (m_focus * m_zAxis);
-		// 		ray.dir = normalize(ray.dir);
-				
-		// 	}
-		// }
-		ray.org = m_pos;
-		ray.dir = ( m_xAxis * (2.0f * ((x/(float)getResolution().width - .5f) * m_aspect)))
-		+ ( m_yAxis * (2.0f * (y/(float)getResolution().height- .5f)))
-    	+ ( m_zAxis * m_focus);
+		float sscx = (2 * ndcx - 1) * m_aspect;
+		float sscy = 2 * ndcy - 1;
+
+		ray.dir = m_zAxis * m_focus + sscx * m_xAxis + sscy * m_yAxis;
 		ray.dir = normalize(ray.dir);
+		ray.org = m_pos;
+		ray.t = std::numeric_limits<float>::max();
 		return true;
 	}
 
